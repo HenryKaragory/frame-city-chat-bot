@@ -27,13 +27,11 @@ def handle_verification():
 @app.route('/', methods=['POST'])
 def handle_messages():
   body = request.get_json()
-  print(type(body))
-  print(body)
 
   if body['object'] == 'page':
     for entry in body['entry']:
       webhook_event = entry['messaging'][0]['message']
-      sender_id = entry['messaging']['sender']['id']
+      sender_id = entry['messaging'][0]['sender']['id']
       respond(sender_id)
       print(webhook_event)
     return 'EVENT RECEIVED...'
