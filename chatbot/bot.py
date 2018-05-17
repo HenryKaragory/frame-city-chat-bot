@@ -29,6 +29,7 @@ def handle_messages():
   body = request.get_json()
 
   if body['object'] == 'page':
+    print(body)
     for entry in body['entry']:
       print(entry)
       webhook_event = entry['messaging'][0]['message']
