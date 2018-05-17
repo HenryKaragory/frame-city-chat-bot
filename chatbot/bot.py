@@ -21,7 +21,7 @@ def handle_verification():
   if mode and token:
     if mode == 'subscribe' and token == verify_token:
       print('WEBHOOK VERIFIED...')
-      return 'ok'
+      return challenge
     else:
       print('WEBHOOK NOT VERIFIED...')
       return 'not verified', 403
