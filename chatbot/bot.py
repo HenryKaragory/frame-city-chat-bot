@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def handle_verification():
-  verify_token = ''
+  verify_token = os.environ['VERIFYTOKEN']
 
   # Parse query params
   mode = request.args['hub.mode']
