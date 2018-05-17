@@ -3,9 +3,7 @@ import json
 import requests
 import os
 
-# This needs to be filled with the Page Access Token that will be provided
-# by the Facebook App that will be created.
-PAT = ''
+PAT = os.environ['PAT']
 
 app = Flask(__name__)
 
@@ -35,20 +33,26 @@ def handle_messages():
   if body['object'] == 'page':
     for entry in body['entry']:
       webhook_event = entry['messaging'][0]['message']
+      sender_id = entry['messaging']['sender']['id']
+      respond(sender_id)
       print(webhook_event)
     return 'EVENT RECEIVED...'
   else:
     return 'bad', 404
 
-def respond():
+def respond(recipient_id):
   params = {'access_token': PAT}
   headers = {'Content-type': 'application/json'}
   body = {
     'messaging_type': 'RESPONSE',
-    'recipient': {'id': recipient}, 
+    'recipient': {'id': recipient_id}, 
     'message': {'text': 'Hello!'}
     }
-  r = requests.post('https://graph.facebook.com/v2.6/me/messages')
+  r = requests.post('https://graph.facebook.com/v2.6/me/messages',
+      headers=headers,
+      params=params,
+      json=body
+    )
 
 
 if __name__ == '__main__':
