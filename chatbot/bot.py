@@ -30,10 +30,10 @@ def handle_messages():
 
   if body['object'] == 'page':
     for entry in body['entry']:
+      print(entry)
       webhook_event = entry['messaging'][0]['message']
       sender_id = entry['messaging'][0]['sender']['id']
       respond(sender_id)
-      print(webhook_event)
     return 'EVENT RECEIVED...'
   else:
     return 'bad', 404
@@ -44,7 +44,7 @@ def respond(recipient_id):
   body = {
     'messaging_type': 'RESPONSE',
     'recipient': {'id': recipient_id}, 
-    'message': {'text': 'Hello!'}
+    'message': {'text': 'This is the app!'}
     }
   r = requests.post('https://graph.facebook.com/v2.6/me/messages',
       headers=headers,
