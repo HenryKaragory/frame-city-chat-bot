@@ -30,7 +30,7 @@ def get_meaning_entities(message):
 	TODO: THE MESSAGE MUST BE LESS THAN 256 IN LENGTH AND MAY NOT BE EMPTY
 	"""
 
-	
+	headers = {'Authorization': 'Bearer ' + wit_ai_token}
 	params = {'v': wit_ai_version, 'q': message, 'n': 8}
 	r = requests.get(wit_ai_message_meaning_uri,
 			headers=headers,
