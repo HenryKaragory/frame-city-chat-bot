@@ -1,0 +1,13 @@
+entity: intent, value: general_price_information
+How much do you charge?
+How much does it cost to frame a picture?
+What are your prices?
+How much does framing cost?
+How much does matting cost? 
+Are you the cheapest frame shop?
+How much will my order cost?
+Will my order cost a lot?
+Can I see your prices?
+Prices?
+Cost?
+How much does it cost?
