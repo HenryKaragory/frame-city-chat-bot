@@ -22,7 +22,7 @@ def determine_meaning(message):
 	meaning = 'undetermined' if (len(intent_value_list)==0) else intent_value_list[0]
 
 
-def get_meaning_entitites(message):
+def get_meaning_entities(message):
 	"""
 	This function returns the dictionary of entities returned by wit.ai according
 	to the message that was sent. 
