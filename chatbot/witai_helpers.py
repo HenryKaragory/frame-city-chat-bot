@@ -11,15 +11,16 @@ def determine_meaning(message):
 	"""
 	This function determines the most likely intent entity value according to the wit.ai application.
 	"""
-	meaning_entitites_dict = get_meaning_entities(message)
+	meaning_entities_dict = get_meaning_entities(message)
 
 	# List to store custom user intents
 	intent_value_list = []
 
 	if 'intent' in meaning_entities_dict:
-		intent_value_list = map(lambda x: x['value'], meaning_entities_dict['intent'])
+		intent_value_list = list(map(lambda x: x['value'], meaning_entities_dict['intent']))
 
-	meaning = 'undetermined' if (len(intent_value_list)==0) else intent_value_list[0]
+	print(intent_value_list)
+	return ('undetermined' if (len(intent_value_list)==0) else intent_value_list[0])
 
 
 def get_meaning_entities(message):
@@ -42,10 +43,11 @@ def get_meaning_entities(message):
 def determine_response(message):
 	response = ''
 	meaning = determine_meaning(message)
+	print(meaning)
 
-	if meaning == 'general_price_information':
+	if meaning == 'general_price_information' or meaning == 'general_price_info':
 		response = 'We have the cheapest prices!'
 	elif meaning == 'operation_hours':
-		response == 'We are open M-Sat from 9am to 6pm.'
+		response = 'We are open M-Sat from 9am to 6pm.'
 
 	return response
