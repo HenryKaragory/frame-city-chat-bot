@@ -41,6 +41,7 @@ def handle_webhook_events():
       if 'messaging' in entry:
         message_text = entry['messaging'][0]['message']['text']
         if message_text == 'Is joycelyn a goon?':
+          sender_id = entry['messaging'][0]['sender']['id']
           send_helpers.respond_text(sender_id, 'Ye.. but what\'s a goon to a goblin?')
           send_helpers.respond_text(sender_id, 'nutin nutin she aint scaring nutin')
         else:
