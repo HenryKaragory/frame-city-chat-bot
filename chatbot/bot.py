@@ -40,7 +40,7 @@ def handle_webhook_events():
       
       if 'postback' in entry['messaging'][0]:
         sender_id = entry['messaging'][0]['sender']['id']
-        paylod = entry['messaging'][0]['postback']['payload']
+        payload = entry['messaging'][0]['postback']['payload']
         send_helpers.handle_postback(sender_id, payload)
       elif 'message' in entry['messaging'][0]:
         message_text = entry['messaging'][0]['message']['text']
