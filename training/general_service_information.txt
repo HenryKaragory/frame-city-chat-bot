@@ -1,0 +1,4 @@
+entity: intent, value: general_service_information
+What services do you offer?
+What do you do?
+What can I order from you?

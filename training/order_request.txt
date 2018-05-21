@@ -1,0 +1,8 @@
+entity: intent, value: order_request
+Can I place an order?
+How do I place an order?
+How can I place an order?
+I'd like to make an order
+I want to get my picture framed
+I have a picture that I would like framed
+I want to frame my picture

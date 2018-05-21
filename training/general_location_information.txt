@@ -1,0 +1,26 @@
+entity: intent, value: general_location_information
+Where are you located?
+What is your address?
+Where is the frame shop?
+What is the address of the Frame Shop?
+What is the address of the Frame Shop
+What's the address of the frame shop?
+What's the address of the frame shop
+Address?
+address
+Where is your shop?
+What is the address of your shop?
+Can you tell me where you are located?
+What's your location?
+Where are you?
+Location?
+Where is it at?
+Where is the shop
+Where's the shop
+Can you please tell me what your address is?
+What is your location?
+Could you tell me what your location is?
+Could you tell me where the shop is?
+Could you tell me where the frame shop is?
+Where are you?
+

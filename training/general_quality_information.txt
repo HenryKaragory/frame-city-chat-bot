@@ -1,0 +1,4 @@
+entity: intent, value: general_quality_information
+Are your frames any good?
+What is the quality of your service?
+What are your reviews like?
