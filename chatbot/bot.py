@@ -3,7 +3,6 @@ import json
 import requests
 import os
 
-from . import witai_helpers
 from . import send_helpers
 
 fb_verify_token = os.environ['VERIFYTOKEN']
@@ -40,15 +39,14 @@ def handle_webhook_events():
     
       if 'messaging' in entry:
         message_text = entry['messaging'][0]['message']['text']
-        if message_text == 'Is joycelyn a goon?':
-          sender_id = entry['messaging'][0]['sender']['id']
-          send_helpers.respond_text(sender_id, 'Ye.. but what\'s a goon to a goblin?')
-          send_helpers.respond_text(sender_id, 'nutin nutin she aint scaring nutin')
-        else:
-          sender_id = entry['messaging'][0]['sender']['id']
-          response = witai_helpers.determine_response(message_text)
-          send_helpers.respond_text(sender_id, response)
-    
+        sender_id = entry['messaging'][0]['sender']['id']
+        send_helpers.send_response(sender_id, message_text)
+
+      if 'postback' in entry:
+        sender_id = entry['messaging'][0]['sender']['id']
+        paylod = entry['postback']['payload']
+        send_helpers.handle_postback(sender_id, payload)
+
     return 'EVENT RECEIVED...'
   else:
     return 'bad', 404
