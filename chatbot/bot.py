@@ -38,15 +38,14 @@ def handle_webhook_events():
   if body['object'] == 'page':
     for entry in body['entry']:
       
-      if 'messaging' in entry:
-        message_text = entry['messaging'][0]['message']['text']
-        sender_id = entry['messaging'][0]['sender']['id']
-        send_helpers.send_response(sender_id, message_text)
-
       if 'postback' in entry:
         sender_id = entry['messaging'][0]['sender']['id']
         paylod = entry['postback']['payload']
         send_helpers.handle_postback(sender_id, payload)
+      elif 'message' in entry['messaging'][0]:
+        message_text = entry['messaging'][0]['message']['text']
+        sender_id = entry['messaging'][0]['sender']['id']
+        send_helpers.send_response(sender_id, message_text)
 
     return 'EVENT RECEIVED...'
   else:
