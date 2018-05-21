@@ -10,7 +10,11 @@ wit_ai_token = os.environ['WITAITOKEN']
 def determine_meaning(message):
 	"""
 	This function determines the most likely intent entity value according to the wit.ai application.
+
+	Parameters:
+		message - The message that witai will determine the entity and value for
 	"""
+
 	meaning_entities_dict = get_meaning_entities(message)
 
 	# List to store custom user intents
@@ -19,16 +23,14 @@ def determine_meaning(message):
 	if 'intent' in meaning_entities_dict:
 		intent_value_list = list(map(lambda x: x['value'], meaning_entities_dict['intent']))
 
-	print(intent_value_list)
-	return ('undetermined' if (len(intent_value_list)==0) else intent_value_list[0])
 
+	return ('undetermined' if (len(intent_value_list)==0) else intent_value_list[0])
 
 def get_meaning_entities(message):
 	"""
 	This function returns the dictionary of entities returned by wit.ai according
-	to the message that was sent. 
-
-	TODO: THE MESSAGE MUST BE LESS THAN 256 IN LENGTH AND MAY NOT BE EMPTY
+	to the message that was sent. The string message must be less than 256 characters
+	in lest and may not be empty.
 	"""
 
 	headers = {'Authorization': 'Bearer ' + wit_ai_token}
@@ -39,15 +41,3 @@ def get_meaning_entities(message):
 		)
 	body = r.json()
 	return body['entities']
-
-def determine_response(message):
-	response = ''
-	meaning = determine_meaning(message)
-	print(meaning)
-
-	if meaning == 'general_price_information' or meaning == 'general_price_info':
-		response = 'We have the cheapest prices!'
-	elif meaning == 'operation_hours':
-		response = 'We are open M-Sat from 9am to 6pm.'
-
-	return response
