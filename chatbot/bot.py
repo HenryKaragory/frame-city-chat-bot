@@ -1,17 +1,32 @@
 from flask import Flask, request
+from db import schema, session
+from . import send_helpers
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+
 import json
+import atexit
 import requests
 import os
 
-from . import send_helpers
-
-fb_verify_token = os.environ['VERIFYTOKEN']
+# Set up jobs to run in the background
+scheduler = BackgroundScheduler()
+scheduler.add_job(
+  func=send_request_for_review, 
+  trigger=IntervalTrigger(hours=72),
+  id='request_review_job',
+  name='Requests reviews from customers every three days.')
+scheduler.start()
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def handle_verification():
   """Implements webhook verification as outlined by the Messenger Platform"""
+  fb_verify_token = os.environ['VERIFYTOKEN']
 
   # Parse query params
   mode = request.args['hub.mode']
@@ -41,11 +56,13 @@ def handle_webhook_events():
       if 'postback' in entry['messaging'][0]:
         sender_id = entry['messaging'][0]['sender']['id']
         payload = entry['messaging'][0]['postback']['payload']
-        send_helpers.handle_postback(sender_id, payload)
+        with session_scope() as session:
+          send_helpers.handle_postback(sender_id, payload, session)
       elif 'message' in entry['messaging'][0]:
         message_text = entry['messaging'][0]['message']['text']
         sender_id = entry['messaging'][0]['sender']['id']
-        send_helpers.send_response(sender_id, message_text)
+        with session_scope() as session:
+          send_helpers.send_response(sender_id, message_text, session)
 
     return 'EVENT RECEIVED...'
   else:

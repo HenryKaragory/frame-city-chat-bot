@@ -8,6 +8,9 @@ requests = "*"
 flask = "*"
 gunicorn = "*"
 pymysql = "*"
+sqlalchemy = "*"
+apscheduler = "*"
+pymessenger = "*"
 
 [dev-packages]
 

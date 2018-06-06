@@ -1,14 +1,18 @@
+from pymessenger.bot import Bot as MessengerBot
 import requests 
 import os
 
 from . import witai_helpers
+from db.schema import *
 
 # Setup for facebook messenger send API uris
 send_message_uri = 'https://graph.facebook.com/v2.6/me/messages'
 
+graph_uri = 'https://graph.facebook.com/v{version}/{path}'
+
 PAT = os.environ['PAT']
 
-def send_response(sender_id, message):
+def send_response(sender_id, message, session):
   """
   This function sends a response to the user identified by sender_id.
 
@@ -16,11 +20,11 @@ def send_response(sender_id, message):
     sender_id: The psid of the user that sent the message.
     message: The message sent by the user identified by psid.
   """
-  response = ''
+  messenger_bot = MessengerBot(PAT)
+  messenger_bot.send_action(sender_id, 'mark_seen')
+  messenger_bot.send_action(sender_id, 'typing_on')
 
-  if message == 'information':
-    send_information_buttons(sender_id)
-
+  # TODO REFACTOR
   meaning = witai_helpers.determine_meaning(message)
 
   if meaning == 'general_price_information' or meaning == 'general_price_info':
@@ -33,10 +37,18 @@ def send_response(sender_id, message):
     response = 'We offer custom framing at affordable prices!'
   elif meaning == 'general_quality_information':
     response = 'We are the best framers in central Ohio!'
+  elif meaning == 'general_bot_information':
+    send_information_buttons(sender_id)
+    return
+
   elif meaning == 'rude_customer':
     response = 'That was rude!'
 
-  send_text_response(sender_id, response)
+  elif meaning == 'Schedule appointment':
+    schedule_appointment(sender_id)
+
+  messenger_bot.send_action(sender_id, 'typing_off')
+  messenger_bot.send_text_message(sender_id, message)
 
 def send_message(recipient_id, params, headers, body):
   return requests.post(send_message_uri,
@@ -102,8 +114,18 @@ def send_information_buttons(recipient_id):
           "buttons":[
             {
               "type": "postback",
-              "title": "Postback button test",
-              "payload": "test_payload"
+              "title": "Store hours",
+              "payload": "store_hours_postback"
+            },
+            {
+              "type": "postback",
+              "title": "Store Information",
+              "payload": "store_information_postback"
+            },
+            {
+              "type": "postback",
+              "title": "Phone Number",
+              "payload": "phone_number_postback"
             }
           ]
         }
@@ -112,11 +134,35 @@ def send_information_buttons(recipient_id):
   }
   send_message(recipient_id, params, headers, body)
 
+def send_api_request(pat, method, path, params=None, json=None):
+  # TODO
+  params = {'access_token': PAT}
+  headers = {'Content-type': 'application/json'}
+  body = {
+    'messaging_type': 'RESPONSE',
+    'recipient': {'id': recipient_id}, 
+    'message': {'text': text_message}
+    }
+  r = requests.request(
+    method=method,
+    url=send_api_url+'/'+SEND_API
+  )
 
-def handle_postback(sender_id, payload):
+
+def handle_postback(sender_id, payload, session):
   """
   This function is the main handler for postback events sent to the webhook.
   """
-  if payload == 'test_payload':
-    send_text_response(sender_id, 'The test postback button worked!')
+  if payload == 'store_hours_postback':
+    send_text_response(sender_id, 'Frame City is open M-F 10am-6pm and Saturday 10am-3pm.')
+  elif payload == 'store_information_postback':
+    send_text_response(sender_id, 'Frame City is located at 4954 N High St, Columbus, OH 43085.')
+  elif payload == 'phone_number_postback':
+    send_text_response(sender_id, "Frame City's Phone number is (614)-885-0929")
 
+class FbSendBot:
+
+  def __init__(self, page_access_token, version=None);
+    self.pat = page_access_token
+    self.version = version or '2.6'
+    self.api_url = 'https://graph.facebook.com/{version}/{path}'
